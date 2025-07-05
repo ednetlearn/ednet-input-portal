@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import base from './airtable'; // adjust path if needed
 
 function WorksheetInputPortal() {
   const [inputMode, setInputMode] = useState('text');
@@ -30,10 +31,28 @@ function WorksheetInputPortal() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitted Data:', formData);
-    alert('Data submitted. Ready to connect to Airtable.');
+
+    try {
+      await base(import.meta.env.VITE_AIRTABLE_TABLE_NAME).create([
+        {
+          fields: {
+            "Topic / Keyword": formData.topic,
+            "Grade": formData.grade,
+            "Subject": formData.subject,
+            "Content Type": formData.contentType,
+            "Text Prompt Input": formData.textPrompt || '',
+            "Status": "Draft"
+          }
+        }
+      ]);
+
+      alert('✅ Data submitted to Airtable!');
+    } catch (error) {
+      console.error('❌ Error submitting to Airtable:', error);
+      alert('Error submitting data to Airtable.');
+    }
   };
 
   return (
@@ -76,7 +95,7 @@ function WorksheetInputPortal() {
             >
               <option value="">Select Grade</option>
               {[...Array(12)].map((_, i) => (
-                <option key={i + 1} value={i + 1}>{`Grade ${i + 1}`}</option>
+                <option key={i + 1} value={`Grade ${i + 1}`}>{`Grade ${i + 1}`}</option>
               ))}
             </select>
 
