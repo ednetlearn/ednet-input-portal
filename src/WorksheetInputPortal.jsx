@@ -21,7 +21,7 @@ export default function WorksheetInputPortal() {
         setFormData((prev) => ({
           ...prev,
           file: uploadedFile,
-          previewText: event.target.result.slice(0, 1000) // basic preview
+          previewText: event.target.result.slice(0, 1000)
         }));
       };
       if (uploadedFile) reader.readAsText(uploadedFile);
