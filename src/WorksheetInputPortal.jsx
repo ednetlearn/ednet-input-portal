@@ -43,5 +43,105 @@ export default function WorksheetInputPortal() {
       <div className="mb-4">
         <label className="mr-4">Select Input Mode:</label>
         {['text', 'dropdown', 'upload'].map((mode) => (
-          <label key={mode}
+          <label key={mode} className="mr-4">
+            <input
+              type="radio"
+              value={mode}
+              checked={inputMode === mode}
+              onChange={() => setInputMode(mode)}
+              className="mr-1"
+            />
+            {mode.charAt(0).toUpperCase() + mode.slice(1)}
+          </label>
+        ))}
+      </div>
 
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          name="topic"
+          placeholder="Topic / Keyword"
+          value={formData.topic}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        />
+
+        {(inputMode === 'dropdown' || inputMode === 'text') && (
+          <>
+            <select
+              name="grade"
+              value={formData.grade}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            >
+              <option value="">Select Grade</option>
+              {[...Array(12)].map((_, i) => (
+                <option key={i + 1} value={i + 1}>{`Grade ${i + 1}`}</option>
+              ))}
+            </select>
+
+            <select
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            >
+              <option value="">Select Subject</option>
+              {['English', 'Math', 'Science', 'Telugu', 'Hindi'].map((subj) => (
+                <option key={subj} value={subj}>{subj}</option>
+              ))}
+            </select>
+
+            <select
+              name="contentType"
+              value={formData.contentType}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            >
+              <option value="">Select Content Type</option>
+              {['Worksheet', 'Quiz', 'Test', 'Revision Notes'].map((type) => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </>
+        )}
+
+        {inputMode === 'text' && (
+          <textarea
+            name="textPrompt"
+            value={formData.textPrompt}
+            onChange={handleChange}
+            placeholder="Enter topic details, instructions, etc."
+            className="w-full p-2 border rounded"
+            rows={4}
+          />
+        )}
+
+        {inputMode === 'upload' && (
+          <>
+            <input
+              type="file"
+              name="file"
+              accept=".pdf,.txt,.png,.jpg"
+              onChange={handleChange}
+              className="w-full"
+            />
+            {formData.previewText && (
+              <div className="border p-2 mt-2 bg-gray-100 rounded">
+                <h3 className="font-semibold">File Preview:</h3>
+                <p className="whitespace-pre-wrap text-sm">{formData.previewText}</p>
+              </div>
+            )}
+          </>
+        )}
+
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  );
+}
